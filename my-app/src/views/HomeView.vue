@@ -10,24 +10,50 @@
 			<button @click="logout">Выйти</button>
 		</div>
 
+		<div class="products">
+			<div v-for="product in products" :key="product.id" class="card">
+				<h3>{{product.name}}</h3>
+				<p>{{product.description}}</p>
+				<p class="price">{{product.price}} ₽</p>
+				<button @click="addToCart(product)">
+					Добавить в корзину
+				</button>
+			</div>
+		</div>
+
 	</div>
 </template>
 
 <script>
-export default{
+import { getProducts } from '../utils/api'
+export default {
+	data(){
+		return{
+			products:[]
+		}
+	},
 	computed:{
-    isAuth(){
-      return this.$store.getters.isAuthenticated
-    },
-    username(){
-      return localStorage.getItem('username')
-    }
-  },
+		isAuth(){
+			return this.$store.getters.isAuthenticated
+		},
+		username(){
+			return localStorage.getItem('username')
+		}
+	},
 	methods:{
 		logout(){
 			this.$store.dispatch('LOGOUT')
 			this.$router.push('/')
+		},
+		addToCart(product){
+			console.log('Добавлено в корзину',product)
 		}
+	},
+	mounted(){
+		getProducts()
+		.then(data=>{
+			this.products = data.slice(0,9)
+		})
 	}
 }
 </script>
@@ -53,6 +79,26 @@ export default{
 }
 .profile button{
 	margin-top:10px;
+	padding:5px 10px;
+	border:1px solid black;
+	border-radius:5px;
+}
+.products{
+	margin-top:40px;
+	display:grid;
+	grid-template-columns:repeat(3,1fr);
+	gap:20px;
+}
+.card{
+	border:1px solid black;
+	padding:15px;
+	border-radius:5px;
+}
+.price{
+	font-weight:bold;
+	margin:10px 0;
+}
+.card button{
 	padding:5px 10px;
 	border:1px solid black;
 	border-radius:5px;

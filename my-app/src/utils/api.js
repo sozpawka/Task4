@@ -45,3 +45,15 @@ export const signupRequest = (user) =>{
 
 	})
 };
+export const getProducts=()=>{
+	return new Promise((resolve,reject)=>{
+		fetch(`${API}/products`)
+		.then(res=>res.json())
+		.then(data=>{
+			resolve(data.data)
+		})
+		.catch(error=>{
+			reject(error)
+		})
+	})
+};
