@@ -1,10 +1,11 @@
+import { loginRequest } from '@/utils/api';
 import { createStore } from 'vuex';
 export default createStore({
 	state:{
-		token:localStorage.getItem('myAppToken')||''
+		token:localStorage.getItem('myAppToken')||'',
 	},
 	getters:{
-		isAuthenticated:(state)=>!!state.token
+		isAuthenticated:(state)=>!!state.token,
 	},
 	mutations:{
 		AUTH_SUCCESS:(state,token)=>{
@@ -12,21 +13,18 @@ export default createStore({
 		},
 		AUTH_ERROR:(state)=>{
 			state.token=''
+		},
+		LOGOUT:(state)=>{
+			state.token=''
 		}
 	},
 	actions:{
 		AUTH_REQUEST:({commit},user)=>{
 			return new Promise((resolve,reject)=>{
-				fetch('http://localhost:3000/login',{
-					method:'POST',
-					headers:{'Content-Type':'application/json'},
-					body:JSON.stringify(user)
-				})
-				.then(res=>res.json())
-				.then(data=>{
-					const token=data.data.user_token
-					localStorage.setItem('myAppToken',token)
+				loginRequest(user)
+				.then((token)=>{
 					commit('AUTH_SUCCESS',token)
+					localStorage.setItem('myAppToken',token)
 					resolve()
 				})
 				.catch(()=>{
@@ -35,6 +33,12 @@ export default createStore({
 					reject()
 				})
 			})
+		},
+
+		LOGOUT:({commit})=>{
+			commit('LOGOUT')
+			localStorage.removeItem('myAppToken')
+			localStorage.removeItem('username')
 		}
 	}
 })

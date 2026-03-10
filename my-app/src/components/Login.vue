@@ -1,15 +1,11 @@
 <template>
 	<form class="login" @submit.prevent="login">
 		<h1>Sign in</h1>
-
 		<label>Username</label>
 		<input type="text" required v-model="username"/>
-
 		<label>Password</label>
 		<input type="password" required v-model="password"/>
-
 		<hr/>
-
 		<button type="submit">Login</button>
 	</form>
 </template>
@@ -28,10 +24,13 @@ export default{
 				email:this.username,
 				password:this.password
 			}
-
+			localStorage.setItem('username',this.username)
 			this.$store
-			.dispatch('AUTH_REQUEST',userData)
-			.then(()=>this.$router.push('/'))
+				.dispatch('AUTH_REQUEST',userData)
+				.then(()=>this.$router.push('/'))
+				.catch(()=>{
+					alert('Неправильный логин или пароль')
+				})
 		}
 	}
 }
