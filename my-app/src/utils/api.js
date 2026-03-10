@@ -22,7 +22,7 @@ export const loginRequest = (user) =>{
         });
     });
 };
-export const signupRequest = (user)=>{
+export const signupRequest = (user) =>{
 	return new Promise((resolve,reject)=>{
 		fetch(`${API}/signup`,{
 			method:'POST',
@@ -31,16 +31,17 @@ export const signupRequest = (user)=>{
 			},
 			body:JSON.stringify(user)
 		})
-		.then(res=>res.json())
-		.then(data=>{
-			if(data.data){
-				resolve(data.data.user_token)
+		.then(async res=>{
+			const data = await res.json()
+			if(res.status === 200){
+				resolve(data.data)
 			}else{
-				reject(data.error)
+				reject(data)
 			}
 		})
 		.catch(error=>{
 			reject(error)
-		});
-	});
+		})
+
+	})
 };

@@ -40,14 +40,12 @@ export default{
                 this.$router.push('/login')
             })
             .catch((err)=>{
-                if(err && err.errors){
-                    this.error=Object.values(err.errors).join(',')
-                }else if(err && err.message){
-                    this.error=err.message
-                }else{
-                    this.error='Ошибка регистрации'
-                }
-            })
+				if(err && err.errors){
+					this.error=Object.values(err.errors[0]).join(', ')
+				}else{
+					this.error='Ошибка регистрации'
+				}
+			})
         }
 	}
 }
