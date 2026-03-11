@@ -4,19 +4,21 @@
         <button @click="$router.push('/')">
              На главную
         </button>
-		<div
-			v-for="item in cart"
-			:key="item.id"
-			class="card"
-		>
+		<div v-if="cart.length === 0">
+			Корзина пустая
+		</div>
+		<div v-for="item in cart" :key="item.id" class="card">
 			<h3>{{ item.name }}</h3>
 			<p>{{ item.description }}</p>
 			<p>{{ item.price }} ₽</p>
+			<button @click="removeItem(item.id)">
+				Удалить
+			</button>
 		</div>
 	</div>
 </template>
 <script>
-import { getCartRequest } from '../utils/api'
+import { getCartRequest, removeFromCartRequest } from '../utils/api'
 export default {
 	data() {
 		return {
@@ -29,7 +31,17 @@ export default {
 			.then(data => {
 				this.cart = data
 			})
-	}
+	},
+	methods:{
+		removeItem(id){
+			const token = localStorage.getItem('myAppToken')
+			removeFromCartRequest(id,token)
+			.then(()=>{
+				this.cart = this.cart.filter(item => item.id !== id)
+
+			})
+		}
+	},
 }
 </script>
 <style scoped>
