@@ -33,7 +33,7 @@ export const signupRequest = (user) =>{
 		})
 		.then(async res=>{
 			const data = await res.json()
-			if(res.status === 200){
+			if(res.status === 201){
 				resolve(data.data)
 			}else{
 				reject(data)
@@ -86,13 +86,22 @@ export const removeFromCartRequest = (id, token) => {
 	})
 	.then(res => res.json())
 };
-export const getOrdersRequest = (token) => {
+export const createOrderRequest = (token) => {
 	return fetch(`${API}/order`, {
-		method: 'GET',
-		headers: {
-			'Authorization': 'Bearer ' + token
-		}
+	method: 'POST',
+	headers: {
+	'Authorization': 'Bearer ' + token
+	}
 	})
 	.then(res => res.json())
-	.then(data => data.data)
+	.then(res=>res.data)
+};
+export const getOrdersRequest = (token) => {
+	return fetch(`${API}/order`,{
+		headers:{
+			'Authorization':'Bearer '+token
+		}
+	})
+	.then(res=>res.json())
+	.then(res=>res.data)
 };

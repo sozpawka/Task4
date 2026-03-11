@@ -2,17 +2,17 @@
 	<div class="home">
 		<h1>Каталог товаров</h1>
 		<div v-if="!isAuth" class="links">
-			<router-link to="/login">Войти</router-link>
-			<router-link to="/signup">Регистрация</router-link>
+			<router-link to="/login" class="login">Войти</router-link>
+			<router-link to="/signup" class="signup">Регистрация</router-link>
 		</div>
 		<div v-if="isAuth" class="profile">
 			<p>Профиль: {{username}}</p>
 			<p>Корзина: {{cartCount}}</p>
-			<button @click="$router.push('/cart')"> Открыть корзину</button>
+			<button class="add" @click="$router.push('/cart')">Открыть корзину</button>
 			<button v-if="cartCount > 0" @click="$router.push('/orders')">
 				Мои заказы
 			</button>
-			<button @click="logout">Выйти</button>
+			<button class="delete" @click="logout">Выйти</button>
 		</div>
 
 		<div class="products">
@@ -20,7 +20,7 @@
 				<h3>{{product.name}}</h3>
 				<p>{{product.description}}</p>
 				<p class="price">{{product.price}} ₽</p>
-				<button v-if="isAuth" @click="addToCart(product)">
+				<button v-if="isAuth" class="add" @click="addToCart(product)">
 					Добавить в корзину
 				</button>
 			</div>
@@ -48,9 +48,18 @@ export default {
 	},
 	methods:{
 		logout(){
-			this.$store.dispatch('LOGOUT')
+		const token = localStorage.getItem('myAppToken')
+		fetch(`${API}/logout`,{
+			method:'GET',
+			headers:{
+				'Authorization':'Bearer '+token
+			}
+		})
+		.then(()=>{
+			localStorage.removeItem('myAppToken')
 			this.$router.push('/')
-		},
+		})
+	},
 		addToCart(product){
 			if(!this.isAuth){
 				alert('Сначала войдите')

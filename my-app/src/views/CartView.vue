@@ -1,7 +1,7 @@
 <template>
 	<div class="cart">
 		<h1>Моя корзина</h1>
-        <button @click="$router.push('/')">
+        <button class="back" @click="$router.push('/')">
              Назад
         </button>
 		<div v-if="cart.length === 0">
@@ -17,10 +17,10 @@
 			<h3>{{ item.name }}</h3>
 			<p>{{ item.description }}</p>
 			<p>{{ item.price }} ₽</p>
-			<button @click="removeAll(item)">
+			<button class="delete" @click="removeAll(item)">
 				Удалить
 			</button>
-			<button @click="addToOrder(item)">
+			<button class="add" @click="addToOrder(item)">
 				Добавить к заказу
 			</button>
 			<input type="checkbox" :value="item.ids[0]" v-model="selectedItems" :disabled="!allowedItems.includes(item.ids[0])"/>
@@ -35,7 +35,7 @@
 	</div>
 </template>
 <script>
-import { getCartRequest, removeFromCartRequest, addToCartRequest } from '../utils/api'
+import { getCartRequest, removeFromCartRequest, addToCartRequest, createOrderRequest } from '../utils/api'
 export default {
 	data() {
 		return {
@@ -92,36 +92,13 @@ export default {
 			if(this.selectedItems.length === 0){
 				return
 			}
-			const productsMap = {}
-			this.cart
-			.filter(item => this.selectedItems.includes(item.id))
-			.forEach(item => {
-				if(!productsMap[item.name]){
-					productsMap[item.name] = 1
-				}else{
-					productsMap[item.name]++
-				}
-
-			})
-			const order = {
-				id: Date.now(),
-				products: productsMap,
-				order_price: this.cart
-					.filter(item => this.selectedItems.includes(item.id))
-					.reduce((sum,item)=>sum+item.price,0)
-			}
-			let orders = JSON.parse(localStorage.getItem('orders') || '[]')
-			orders.push(order)
-			localStorage.setItem('orders', JSON.stringify(orders))
-			alert('Заказ успешно сформирован')
 			const token = localStorage.getItem('myAppToken')
-			this.selectedItems.forEach(id => {
-				removeFromCartRequest(id, token)
+			createOrderRequest(token)
+			.then(()=>{
+				alert('Заказ успешно оформлен')
+				this.selectedItems = []
+				this.$router.push('/orders')
 			})
-			this.cart = this.cart.filter(item => !this.selectedItems.includes(item.id))
-			this.selectedItems = []
-			this.$router.push('/orders')
-
 		},
 		increase(product_id){
 			const token = localStorage.getItem('myAppToken')

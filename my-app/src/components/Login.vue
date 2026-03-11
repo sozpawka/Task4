@@ -9,7 +9,7 @@
 		<p v-if="errors.password" class="error">{{errors.password}}</p>
 		<hr/>
 		<button type="submit">Login</button>
-		<router-link to="/">Назад</router-link>
+		<router-link to="/" class="back">Назад</router-link>
 	</form>
 </template>
 

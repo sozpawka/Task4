@@ -1,7 +1,7 @@
 <template>
 <div class="orders">
 	<h1>Мои заказы</h1>
-	<button @click="$router.push('/')">
+	<button class="back" @click="$router.push('/')">
 		Назад
 	</button>
 	<div v-if="orders.length === 0">
@@ -9,15 +9,8 @@
 	</div>
 	<div v-for="order in orders" :key="order.id" class="order-card">
 		<h3>Заказ № {{ order.id }}</h3>
-		<p>
-			Товары:
-			<span v-for="(count, name) in order.products" :key="name">
-				{{ name }} ({{ count }}) 
-			</span>
-		</p>
-		<p>
-			Сумма заказа: {{ order.order_price }} ₽
-		</p>
+		<p> Товары: {{ formatProducts(order.products) }}</p>
+		<p>	Сумма заказа: {{ order.order_price }} ₽	</p>
 	</div>
 </div>
 </template>
@@ -31,9 +24,29 @@ export default {
 		}
 	},
 	mounted(){
-        const localOrders = JSON.parse(localStorage.getItem('orders') || '[]')
-        this.orders = localOrders
-	}
+			const token = localStorage.getItem('myAppToken')
+			getOrdersRequest(token)
+			.then(data=>{
+			this.orders = data
+		})
+	},
+	methods:{
+		formatProducts(products){
+			const map = {}
+
+			products.forEach(id=>{
+				if(!map[id]){
+					map[id] = 1
+				}else{
+					map[id]++
+				}
+			})
+
+			return Object.entries(map)
+				.map(([id,count]) => `${id} (${count})`)
+				.join(', ')
+		}
+	},
 }
 </script>
 <style scoped>
