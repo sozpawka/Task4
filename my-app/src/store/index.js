@@ -24,7 +24,7 @@ export default createStore({
 				loginRequest(user)
 				.then((token)=>{
 					commit('AUTH_SUCCESS',token)
-					localStorage.setItem('myAppToken',token)
+					localStorage.getItem('token')
 					resolve()
 				})
 				.catch(()=>{

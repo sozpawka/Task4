@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import store from '../store'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
-
+import CartView from '../views/CartView.vue'
 const ifAuthenticated = (to, from, next)=>{
 	if(store.getters.isAuthenticated){
 		next()
@@ -36,7 +36,12 @@ const routes=[
 		name:'signup',
 		component:()=>import('../views/SignupView.vue'),
 		beforeEnter:ifNotAuthenticated
-	}
+	},
+	{
+		path:'/cart',
+		name:'cart',
+		component:CartView
+	},
 ]
 
 const router=createRouter({

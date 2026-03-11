@@ -7,6 +7,8 @@
 		</div>
 		<div v-if="isAuth" class="profile">
 			<p>Профиль: {{username}}</p>
+			<p>Корзина: {{cartCount}}</p>
+			<button @click="$router.push('/cart')"> Открыть корзину</button>
 			<button @click="logout">Выйти</button>
 		</div>
 
@@ -25,11 +27,12 @@
 </template>
 
 <script>
-import { getProducts } from '../utils/api'
+import { getProducts, addToCartRequest, getCartRequest } from '../utils/api'
 export default {
 	data(){
 		return{
-			products:[]
+			products:[],
+			cartCount:0,
 		}
 	},
 	computed:{
@@ -46,14 +49,34 @@ export default {
 			this.$router.push('/')
 		},
 		addToCart(product){
-			console.log('Добавлено в корзину',product)
-		}
+			if(!this.isAuth){
+				alert('Сначала войдите')
+				this.$router.push('/login')
+				return
+			}
+			const token=localStorage.getItem('myAppToken')
+			addToCartRequest(product.id,token)
+			.then(()=>{
+				alert('Товар добавлен в корзину')
+				this.cartCount++
+			})
+			.catch(()=>{
+				alert('Ошибка добавления')
+			})
+		},
 	},
 	mounted(){
 		getProducts()
 		.then(data=>{
 			this.products = data.slice(0,9)
 		})
+		const token = localStorage.getItem('myAppToken')
+		if(token){
+			getCartRequest(token)
+			.then(data=>{
+				this.cartCount = data.length
+			})
+		}
 	}
 }
 </script>

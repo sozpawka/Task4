@@ -57,3 +57,23 @@ export const getProducts=()=>{
 		})
 	})
 };
+export const addToCartRequest=(product_id,token)=>{
+	return fetch(`${API}/cart/${product_id}`,{
+		method:'POST',
+		headers:{
+			'Authorization':'Bearer '+token,
+			'Content-Type':'application/json'
+		}
+	})
+	.then(res=>res.json())
+};
+export const getCartRequest = (token) => {
+	return fetch(`${API}/cart`, {
+		method: 'GET',
+		headers: {
+			'Authorization': 'Bearer ' + token
+		}
+	})
+	.then(res => res.json())
+	.then(data => data.data)
+};
