@@ -23,7 +23,7 @@
 			<button @click="addToOrder(item.id)">
 				Добавить к заказу
 			</button>
-			<input type="checkbox" :value="item.id" v-model="selectedItems"/>
+			<input type="checkbox" :value="item.id" v-model="selectedItems" :disabled="!allowedItems.includes(item.id)"/>
 		</div>
 	</div>
 </template>

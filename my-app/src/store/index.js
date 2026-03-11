@@ -1,41 +1,40 @@
-import { loginRequest } from '@/utils/api';
-import { createStore } from 'vuex';
+import { loginRequest } from '@/utils/api'
+import { createStore } from 'vuex'
 export default createStore({
 	state:{
-		token:localStorage.getItem('myAppToken')||'',
+		token: localStorage.getItem('myAppToken') || '',
 	},
 	getters:{
-		isAuthenticated:(state)=>!!state.token,
+		isAuthenticated: (state) => !!state.token,
 	},
 	mutations:{
-		AUTH_SUCCESS:(state,token)=>{
-			state.token=token
+		AUTH_SUCCESS: (state, token) => {
+			state.token = token
 		},
-		AUTH_ERROR:(state)=>{
-			state.token=''
+		AUTH_ERROR: (state) => {
+			state.token = ''
 		},
-		LOGOUT:(state)=>{
-			state.token=''
+		LOGOUT: (state) => {
+			state.token = ''
 		}
 	},
 	actions:{
-		AUTH_REQUEST:({commit},user)=>{
-			return new Promise((resolve,reject)=>{
+		AUTH_REQUEST: ({commit}, user) => {
+			return new Promise((resolve, reject) => {
 				loginRequest(user)
-				.then((token)=>{
-					commit('AUTH_SUCCESS',token)
-					localStorage.getItem('token')
+				.then((token) => {
+					commit('AUTH_SUCCESS', token)
+					localStorage.setItem('myAppToken', token)
 					resolve()
 				})
-				.catch(()=>{
+				.catch(() => {
 					commit('AUTH_ERROR')
 					localStorage.removeItem('myAppToken')
 					reject()
 				})
 			})
 		},
-
-		LOGOUT:({commit})=>{
+		LOGOUT: ({commit}) => {
 			commit('LOGOUT')
 			localStorage.removeItem('myAppToken')
 			localStorage.removeItem('username')
