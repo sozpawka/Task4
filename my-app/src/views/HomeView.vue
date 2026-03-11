@@ -20,7 +20,7 @@
 				<h3>{{product.name}}</h3>
 				<p>{{product.description}}</p>
 				<p class="price">{{product.price}} ₽</p>
-				<button @click="addToCart(product)">
+				<button v-if="isAuth" @click="addToCart(product)">
 					Добавить в корзину
 				</button>
 			</div>

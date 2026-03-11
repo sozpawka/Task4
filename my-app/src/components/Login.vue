@@ -1,12 +1,15 @@
 <template>
-	<form class="login" @submit.prevent="login">
+	<form class="login" @submit.prevent="login" novalidate>
 		<h1>Sign in</h1>
 		<label>Username</label>
-		<input type="text" required v-model="username"/>
+		<input type="text" v-model="username" :class="{errorInput: errors.username}"/>
+		<p v-if="errors.username" class="error">{{errors.username}}</p>
 		<label>Password</label>
-		<input type="password" required v-model="password"/>
+		<input type="password" v-model="password" :class="{errorInput: errors.password}"/>
+		<p v-if="errors.password" class="error">{{errors.password}}</p>
 		<hr/>
 		<button type="submit">Login</button>
+		<router-link to="/">Назад</router-link>
 	</form>
 </template>
 
@@ -15,11 +18,25 @@ export default{
 	data(){
 		return{
 			username:'',
-			password:''
+			password:'',
+			errors:{}
 		}
 	},
 	methods:{
+	validate(){
+		this.errors={}
+		if(!this.username){
+			this.errors.username='Введите email'
+		}
+		if(!this.password){
+			this.errors.password='Введите пароль'
+		}
+		return Object.keys(this.errors).length===0
+	},
 		login(){
+			if(!this.validate()){
+				return
+			}
 			const userData={
 				email:this.username,
 				password:this.password
@@ -28,8 +45,9 @@ export default{
 			this.$store
 				.dispatch('AUTH_REQUEST',userData)
 				.then(()=>this.$router.push('/'))
-				.catch(()=>{
-					alert('Неправильный логин или пароль')
+				.catch((err)=>{
+					this.errors.username = 'Неправильный логин или пароль';
+					this.errors.password = 'Неправильный логин или пароль';
 				})
 		}
 	}
@@ -50,5 +68,13 @@ export default{
 }
 hr{
 	margin:10px 0;
+}
+.error{
+	color:red;
+	margin-top:5px;
+	font-size:12px;
+}
+.login input.errorInput{
+	border:1px solid red;
 }
 </style>
