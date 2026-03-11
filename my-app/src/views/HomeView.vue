@@ -9,6 +9,9 @@
 			<p>Профиль: {{username}}</p>
 			<p>Корзина: {{cartCount}}</p>
 			<button @click="$router.push('/cart')"> Открыть корзину</button>
+			<button v-if="cartCount > 0" @click="$router.push('/orders')">
+				Мои заказы
+			</button>
 			<button @click="logout">Выйти</button>
 		</div>
 

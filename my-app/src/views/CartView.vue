@@ -10,6 +10,9 @@
 		<button v-if="selectedItems.length > 0" class="order-btn" @click="makeOrder">
 			Оформить заказ
 		</button>
+		<button v-if="cart.length > 0" @click="$router.push('/orders')">
+			Мои заказы
+		</button>
 		<div v-for="item in cart" :key="item.id" class="card">
 			<h3>{{ item.name }}</h3>
 			<p>{{ item.description }}</p>
@@ -20,7 +23,7 @@
 			<button @click="addToOrder(item.id)">
 				Добавить к заказу
 			</button>
-			<input type="checkbox":value="item.id" v-model="selectedItems"/>
+			<input type="checkbox" :value="item.id" v-model="selectedItems"/>
 		</div>
 	</div>
 </template>
@@ -30,7 +33,8 @@ export default {
 	data() {
 		return {
 			cart: [],
-			selectedItems:[]
+			selectedItems:[],
+			allowedItems: [],
 		}
 	},
 	mounted() {
@@ -50,6 +54,9 @@ export default {
 			})
 		},
 		addToOrder(id){
+			if(!this.allowedItems.includes(id)){
+				this.allowedItems.push(id)
+			}
 			if(!this.selectedItems.includes(id)){
 				this.selectedItems.push(id)
 			}
@@ -58,6 +65,17 @@ export default {
 			if(this.selectedItems.length === 0){
 				return
 			}
+			const order = {
+				id: Date.now(),
+				products: this.selectedItems,
+				order_price: this.cart
+					.filter(item => this.selectedItems.includes(item.id))
+					.reduce((sum,item)=>sum+item.price,0)
+			}
+
+			let orders = JSON.parse(localStorage.getItem('orders') || '[]')
+			orders.push(order)
+			localStorage.setItem('orders',JSON.stringify(orders))
 			alert('Заказ успешно сформирован')
 			const token = localStorage.getItem('myAppToken')
 			this.selectedItems.forEach(id => {
@@ -65,7 +83,7 @@ export default {
 			})
 			this.cart = this.cart.filter(item => !this.selectedItems.includes(item.id))
 			this.selectedItems = []
-		},
+		}
 	},
 }
 </script>

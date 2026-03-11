@@ -3,6 +3,7 @@ import store from '../store'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import CartView from '../views/CartView.vue'
+import OrdersView from '../views/OrdersView.vue'
 const ifAuthenticated = (to, from, next)=>{
 	if(store.getters.isAuthenticated){
 		next()
@@ -41,6 +42,11 @@ const routes=[
 		path:'/cart',
 		name:'cart',
 		component:CartView
+	},
+	{
+		path: '/orders',
+		name: 'orders',
+		component: OrdersView
 	},
 ]
 

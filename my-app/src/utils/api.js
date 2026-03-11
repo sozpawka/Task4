@@ -86,3 +86,13 @@ export const removeFromCartRequest = (id, token) => {
 	})
 	.then(res => res.json())
 };
+export const getOrdersRequest = (token) => {
+	return fetch(`${API}/order`, {
+		method: 'GET',
+		headers: {
+			'Authorization': 'Bearer ' + token
+		}
+	})
+	.then(res => res.json())
+	.then(data => data.data)
+};
