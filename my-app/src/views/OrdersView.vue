@@ -2,7 +2,7 @@
 <div class="orders">
 	<h1>Мои заказы</h1>
 	<button @click="$router.push('/')">
-		На главную
+		Назад
 	</button>
 	<div v-if="orders.length === 0">
 		У вас пока нет заказов
@@ -10,7 +10,10 @@
 	<div v-for="order in orders" :key="order.id" class="order-card">
 		<h3>Заказ № {{ order.id }}</h3>
 		<p>
-			Товары: {{ order.products.join(', ') }}
+			Товары:
+			<span v-for="(count, name) in order.products" :key="name">
+				{{ name }} ({{ count }}) 
+			</span>
 		</p>
 		<p>
 			Сумма заказа: {{ order.order_price }} ₽
