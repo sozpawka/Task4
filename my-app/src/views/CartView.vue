@@ -145,12 +145,6 @@ export default {
 	margin: 10px 0;
 	border-radius: 5px;
 }
-button{
-	padding:6px 12px;
-	border:1px solid black;
-	border-radius:5px;
-	margin-bottom:20px;
-}
 .top-buttons{
 	display:flex;
 	justify-content:space-between;

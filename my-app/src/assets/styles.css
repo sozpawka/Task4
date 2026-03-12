@@ -13,18 +13,44 @@ button:active{
 	opacity:1;
 	transform:scale(0.97);
 }
-.add, .order-btn{
+.add, .order-btn, .back-btn{
 	background:#4CAF50;
+	color:white;
 }
 .delete{
 	background:#e74c3c;
+	color:white;
 }
 .login{
 	background:#3498db;
+	color:white;
 }
 .signup{
 	background:#f39c12;
+	color:white;
 }
 .back{
 	background:#777;
+	color:white;
+}
+input{
+	padding:8px;
+	border:1px solid #ccc;
+	border-radius:5px;
+}
+.error{
+	color:red;
+	margin-top:10px;
+	font-size:12px;
+}
+.card{
+	border:1px solid black;
+	padding:15px;
+	border-radius:5px;
+}
+.order-card{
+	border:1px solid black;
+	padding:15px;
+	margin:15px 0;
+	border-radius:5px;
 }
